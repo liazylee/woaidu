@@ -20,24 +20,47 @@ from scrapy import Spider
 
 class WoaiduSpider(Spider):
     name = 'woaidu'
-    start_urls = ['http://www.woaidu.org/sitemap_1.html',
-                  'https://www.woaidu.org/xuanhuan_s1.html',
-                  '']
 
-    def parse(self, response):
-        response_selector = Selector(response)
-        next_page = response_selector.xpath('//div[@class="k2"]/div/a[text()="下一页"]/@href').extract_first()
-        if next_page:
-            url = 'http://www.woaidu.org' + next_page
-            yield scrapy.Request(url=url, callback=self.parse)
-        detail_links = response_selector.xpath('//div[contains(@class,"sousuolist")]/a/@href').extract()
-        for detail_link in detail_links:
-            url = 'http://www.woaidu.org' + detail_link
-            # logging.log('{}'.format(url))
-            # print(url)
-            yield scrapy.Request(url=url, callback=self.parse_detail)
+    # start_urls=['https://www.woaidu.org/book_{page}.html'.format(page=str(page))for page in range(190103,1176866)]
 
-        pass
+
+    def start_requests(self):
+        for i in range(191103,1176866):
+            start_url='https://www.woaidu.org/book_{}.html'.format(str(i))
+            yield scrapy.Request(url=start_url, callback=self.parse_detail)
+    # start_urls = [
+    #     'https://www.woaidu.org/book_{}.html'
+        # 'http://www.woaidu.org/sitemap_1.html',
+        # 'https://www.woaidu.org/xuanhuan_s1.html',
+        # 'https://www.woaidu.org/wuxia_s1.html',
+        # 'https://www.woaidu.org/dushi_s1.html',
+        # 'https://www.woaidu.org/yanqing_s1.html',
+        # 'https://www.woaidu.org/kehuan_s1.html',
+        # 'https://www.woaidu.org/lishi_s1.html',
+        # 'https://www.woaidu.org/tongren_s1.html',
+        # 'https://www.woaidu.org/wangyou_s1.html',
+        # 'https://www.woaidu.org/mingzhu_s1.html',
+        # 'https://www.woaidu.org/zhuanji_s1.html',
+        # 'https://www.woaidu.org/qita_s1.html',
+    # ]
+
+    # def parse(self, response):
+
+
+    # def parse(self, response):
+    #     response_selector = Selector(response)
+    #     next_page = response_selector.xpath('//div[@class="k2"]/div/a[text()="下一页"]/@href').extract_first()
+    #     if next_page:
+    #         url = 'http://www.woaidu.org' + next_page
+    #         yield scrapy.Request(url=url, callback=self.parse)
+    #     detail_links = response_selector.xpath('//div[contains(@class,"sousuolist")]/a/@href').extract()
+    #     for detail_link in detail_links:
+    #         url = 'http://www.woaidu.org' + detail_link
+    #         # logging.log('{}'.format(url))
+    #         # print(url)
+    #         yield scrapy.Request(url=url, callback=self.parse_detail)
+
+        # pass
 
     def parse_detail(self, response):
         woaidu_item = WoaiduItem()

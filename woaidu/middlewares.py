@@ -8,6 +8,8 @@ import random
 
 from scrapy import signals
 
+from woaidu.untils.proxy_pool import  get_proxy
+
 
 class WoaiduSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -112,5 +114,14 @@ class UserAgentMiddleware(object):
         agent = random.choice(agents)
         request.headers['User-Agent'] = agent
         # spider.logger(agent)
+
+    pass
+
+
+class PorxyMiddleware(object):
+
+    def process_request(self, request, spider):
+        proxy = get_proxy()
+        request.meta['proxy'] = 'http://{}'.format(proxy)
 
     pass
