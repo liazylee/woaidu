@@ -21,13 +21,13 @@ from scrapy import Spider
 class WoaiduSpider(Spider):
     name = 'woaidu'
 
-    # start_urls=['https://www.woaidu.org/book_{page}.html'.format(page=str(page))for page in range(190103,1176866)]
+    start_urls=['https://www.woaidu.org/book_{page}.html'.format(page=str(page))for page in range(217219,1176866)]
 
 
-    def start_requests(self):
-        for i in range(191103,1176866):
-            start_url='https://www.woaidu.org/book_{}.html'.format(str(i))
-            yield scrapy.Request(url=start_url, callback=self.parse_detail)
+    # def start_requests(self):
+    #     for i in range(191103,1176866):
+    #         start_url='https://www.woaidu.org/book_{}.html'.format(str(i))
+    #         yield scrapy.Request(url=start_url, callback=self.parse_detail)
     # start_urls = [
     #     'https://www.woaidu.org/book_{}.html'
         # 'http://www.woaidu.org/sitemap_1.html',
@@ -62,7 +62,7 @@ class WoaiduSpider(Spider):
 
         # pass
 
-    def parse_detail(self, response):
+    def parse(self, response):
         woaidu_item = WoaiduItem()
         # response_selector = Selector(response)
         response_selector = response.css('div.common-section-left.fl')
@@ -93,5 +93,5 @@ class WoaiduSpider(Spider):
 
             download.append(download_item)
         woaidu_item['book_dowload'] = str(download)
-        pprint(woaidu_item)
+        # pprint(woaidu_item)
         yield woaidu_item
